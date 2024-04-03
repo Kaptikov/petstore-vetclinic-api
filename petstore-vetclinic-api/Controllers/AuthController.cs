@@ -55,6 +55,7 @@ namespace petstore_vetclinic_api.Controllers
         {
             List<Claim> claims = new List<Claim> { 
                 new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(ClaimTypes.Role, "Admin"),
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
@@ -64,7 +65,7 @@ namespace petstore_vetclinic_api.Controllers
 
             var token = new JwtSecurityToken(
                     claims: claims,
-                    expires: DateTime.Now.AddDays(1),
+                    expires: DateTime.Now.AddMinutes(5),
                     signingCredentials: creds
                   );
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);
