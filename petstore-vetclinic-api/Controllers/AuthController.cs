@@ -1,7 +1,13 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using petstore_vetclinic_api.Data;
+using petstore_vetclinic_api.Models.Carts;
 using petstore_vetclinic_api.Models.Users;
+using petstore_vetclinic_api.Services.AuthService;
+using petstore_vetclinic_api.Services.CartService;
+using petstore_vetclinic_api.Services.UserService;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -16,34 +22,45 @@ namespace petstore_vetclinic_api.Controllers
 
         private readonly IConfiguration _configuration;
 
-        public AuthController(IConfiguration configuration)
+        private readonly DataContext _context;
+
+        public AuthController(IConfiguration configuration, DataContext context)
         {
             _configuration = configuration;
+            _context = context;
         }
 
+
         [HttpPost("register")]
-        public ActionResult<User> Register(UserDto request)
+        public async Task<ActionResult<User>> Register(UserDto request)
         {
-            string passwordHash
-                = BCrypt.Net.BCrypt.HashPassword(request.Password);
+            string passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
 
-            user.UserName = request.UserName;
-            user.PasswordHash = passwordHash;
+            User newUser = new User
+            {
+                UserName = request.UserName,
+                PasswordHash = passwordHash
+            };
 
-            return Ok(user);
+            _context.Users.Add(newUser);
+            await _context.SaveChangesAsync();
+
+            return Ok(newUser);
         }
 
         [HttpPost("login")]
         public ActionResult<User> Login(UserDto request)
         {
-            if (user.UserName != request.UserName)  
+            var user = _context.Users.FirstOrDefault(u => u.UserName == request.UserName);
+
+            if (user == null)
             {
                 return BadRequest("User not found.");
             }
 
             if (!BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
             {
-                return BadRequest("Wrond password");
+                return BadRequest("Wrong password");
             }
 
             string token = CreateToken(user);
