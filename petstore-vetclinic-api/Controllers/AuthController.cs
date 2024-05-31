@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -8,6 +9,7 @@ using petstore_vetclinic_api.Models.Users;
 using petstore_vetclinic_api.Services.AuthService;
 using petstore_vetclinic_api.Services.CartService;
 using petstore_vetclinic_api.Services.UserService;
+using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -30,10 +32,13 @@ namespace petstore_vetclinic_api.Controllers
             _context = context;
         }
 
-
         [HttpPost("register")]
         public async Task<ActionResult<User>> Register(UserDto request)
         {
+            /*Console.WriteLine("Received UserDto data:");
+            Console.WriteLine($"UserName: {request.UserName}");
+            Console.WriteLine($"Password: {request.Password}");*/
+
             string passwordHash = BCrypt.Net.BCrypt.HashPassword(request.Password);
 
             User newUser = new User
@@ -70,24 +75,53 @@ namespace petstore_vetclinic_api.Controllers
 
         private string CreateToken(User user) 
         {
-            List<Claim> claims = new List<Claim> { 
+            var userWithRoles = _context.Users
+              .Include(u => u.Roles)
+              .FirstOrDefault(u => u.Id == user.Id);
+
+
+            if (userWithRoles != null) {
+
+                string roleName = userWithRoles.Roles.Name;
+                List<Claim> claims = new List<Claim> { 
                 new Claim(ClaimTypes.Name, user.UserName),
-                new Claim(ClaimTypes.Role, "Admin"),
-            };
+                new Claim(ClaimTypes.Role, roleName),
+                };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
-                _configuration.GetSection("AppSettings:Token").Value!));
+                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
+                    _configuration.GetSection("AppSettings:Token").Value!));
 
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+                var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
-            var token = new JwtSecurityToken(
-                    claims: claims,
-                    expires: DateTime.Now.AddMinutes(5),
-                    signingCredentials: creds
-                  );
-            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+                var token = new JwtSecurityToken(
+                        claims: claims,
+                        expires: DateTime.Now.AddDays(1),
+                        signingCredentials: creds
+                      );
+                var jwt = new JwtSecurityTokenHandler().WriteToken(token);
 
-            return jwt;
+                return jwt;
+            }
+            else
+            {
+                throw new Exception("User not found");
+            }
+        }
+
+        [Authorize]
+        [HttpGet("user")]
+        public ActionResult<User> GetUser()
+        {
+            var userName = User.Identity.Name;
+
+            var user = _context.Users.FirstOrDefault(u => u.UserName == userName);
+
+            if (user == null)
+            {
+                return BadRequest("User not found.");
+            }
+
+            return Ok(user);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using petstore_vetclinic_api.Models.Carts;
 using petstore_vetclinic_api.Models.Favourites;
 using petstore_vetclinic_api.Services.FavouriteItemService;
 
@@ -32,11 +33,21 @@ namespace petstore_vetclinic_api.Controllers
             return Ok(result);
         }
 
-        [HttpPost]
-        public async Task<ActionResult<List<FavouriteItem>>> AddFavouriteItem(FavouriteItem FavouriteItem)
+        [HttpGet("user/{userId}")]
+        public async Task<ActionResult<List<FavouriteItem>>> GetFavouriteItemsByUserId(int userId)
+        {
+            var result = await _FavouriteItemService.GetFavouriteItemsByUserId(userId);
+            if (result is null)
+                return NotFound("FavouriteItems not found for the user.");
+
+            return Ok(result);
+        }
+
+        [HttpPost("user/{userId}")]
+        public async Task<ActionResult<List<FavouriteItem>>> AddFavouriteItem(FavouriteItem FavouriteItem, int userId)
         {
 
-            var result = await _FavouriteItemService.AddFavouriteItem(FavouriteItem);
+            var result = await _FavouriteItemService.AddFavouriteItem(FavouriteItem, userId);
 
             return Ok(result);
         }
@@ -51,10 +62,10 @@ namespace petstore_vetclinic_api.Controllers
             return Ok(result);
         }
 
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<List<FavouriteItem>>> DeleteFavouriteItem(int id)
+        [HttpDelete("{id}/user/{userId}")]
+        public async Task<ActionResult<List<FavouriteItem>>> DeleteFavouriteItem(int id, int userId)
         {
-            var result = await _FavouriteItemService.DeteleFavouriteItem(id);
+            var result = await _FavouriteItemService.DeteleFavouriteItem(id, userId);
             if (result is null)
                 return NotFound("FavouriteItem not found.");
 

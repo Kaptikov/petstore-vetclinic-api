@@ -6,5 +6,6 @@ namespace petstore_vetclinic_api.Services.CartService
     {
         Task<List<Cart>> GetAllCart();
         Task<Cart>? GetSingleCart(int id);
+        Task<List<Cart>?> GetCartsByUserId(int userId);
     }
 }

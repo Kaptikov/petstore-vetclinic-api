@@ -32,5 +32,15 @@ namespace petstore_vetclinic_api.Controllers
 
             return Ok(result);
         }
+
+        [HttpGet("user/{userId}")]
+        public async Task<ActionResult<List<Cart>>> GetCartsByUserId(int userId)
+        {
+            var result = await _CartService.GetCartsByUserId(userId);
+            if (result is null)
+                return NotFound("Cart not found.");
+
+            return Ok(result);
+        }
     }
 }

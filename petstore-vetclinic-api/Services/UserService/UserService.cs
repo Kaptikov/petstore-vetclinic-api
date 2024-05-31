@@ -47,20 +47,36 @@ namespace petstore_vetclinic_api.Services.UserService
             return user;
         }
 
-        public async Task<List<User>?> UpdateUser(int id, User request)
+        public async Task<User>? UpdateUser(int id, User request)
         {
             var user = await _context.Users.FindAsync(id);
             if (user is null)
                 return null;
 
             user.Name = request.Name;
+            user.Lastname = request.Lastname;
             user.Email = request.Email;
-
-            //user.PhoneNumber = request.PhoneNumber;
+            user.Phone = request.Phone;
 
             await _context.SaveChangesAsync();
 
-            return await _context.Users.ToListAsync();
+            return user;
         }
+
+        /* public async Task<List<User>?> UpdateUser(int id, User request)
+         {
+             var user = await _context.Users.FindAsync(id);
+             if (user is null)
+                 return null;
+
+             user.Name = request.Name;
+             user.Lastname = request.Lastname;
+             user.Email = request.Email;
+             user.Phone = request.Phone;
+
+             await _context.SaveChangesAsync();
+
+             return await _context.Users.ToListAsync();
+         }*/
     }
 }

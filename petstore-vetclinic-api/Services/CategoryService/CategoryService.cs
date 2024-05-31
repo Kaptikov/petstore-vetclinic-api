@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using petstore_vetclinic_api.Data;
 using petstore_vetclinic_api.Models.Categories;
+using petstore_vetclinic_api.Models.Products;
 
 namespace petstore_vetclinic_api.Services.CategoryService
 {
@@ -47,6 +48,50 @@ namespace petstore_vetclinic_api.Services.CategoryService
 
             return category;
         }
+
+        public async Task<List<Category>?> GetCategory()
+        {
+            var category = await _context.Categories.Include(c => c.ChildCategories).Where(c => c.ParentCategoryId == null).ToListAsync();
+            return category;
+        }
+
+        public async Task<List<Category>?> GetSubcategories(int parentId)
+        {
+            var subcategories = await _context.Categories
+                .Include(c => c.ChildCategories)
+                .Where(c => c.ParentCategoryId == parentId)
+                .ToListAsync();
+            return subcategories;
+        }
+        public async Task<List<Category>?> GetSubSubcategories(int parentId)
+        {
+            var subsubcategories = await _context.Categories
+                .Where(c => c.ParentCategoryId == parentId && c.ChildCategories.Any())
+                .SelectMany(c => c.ChildCategories)
+                .Include(c => c.ParentCategory)
+                .ToListAsync();
+            return subsubcategories;
+        }
+
+     /*   public async Task<List<Category>> GetAllSubcategories(int parentId)
+        {
+            var subcategories = await _context.Categories
+                .Where(c => c.ParentCategoryId == parentId)
+                .ToListAsync();
+
+            var allSubcategories = new List<Category>();
+            foreach (var subcategory in subcategories)
+            {
+                allSubcategories.AddRange(await GetAllSubcategories(subcategory.Id));
+
+                foreach (var subsubcategory in subcategories)
+                {
+                    allSubcategories.AddRange(await GetAllSubcategories(subsubcategory.Id));
+                }
+            }
+
+            return allSubcategories;
+        }*/
 
         public async Task<List<Category>?> UpdateCategory(int id, Category request)
         {

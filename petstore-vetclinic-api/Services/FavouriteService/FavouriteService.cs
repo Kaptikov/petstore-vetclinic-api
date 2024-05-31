@@ -4,9 +4,9 @@ using petstore_vetclinic_api.Models.Favourites;
 
 namespace petstore_vetclinic_api.Services.FavouriteService
 {
-    public class FavouriteService : IFavouriteService
+    public class FavouriteService
     {
-        private readonly DataContext _context;
+       /* private readonly DataContext _context;
 
         public FavouriteService(DataContext context)
         {
@@ -26,6 +26,6 @@ namespace petstore_vetclinic_api.Services.FavouriteService
                 return favourite;
 
             return favourite;
-        }
+        }*/
     }
 }

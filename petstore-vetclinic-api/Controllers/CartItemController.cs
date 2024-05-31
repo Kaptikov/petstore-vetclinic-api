@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using petstore_vetclinic_api.Models.Animals;
 using petstore_vetclinic_api.Models.Carts;
 using petstore_vetclinic_api.Services.CartItemService;
 
@@ -32,28 +33,39 @@ namespace petstore_vetclinic_api.Controllers
             return Ok(result);
         }
 
-        [HttpPost]
-        public async Task<ActionResult<List<CartItem>>> AddCartItem(CartItem CartItem)
+
+        [HttpGet("user/{userId}")]
+        public async Task<ActionResult<List<CartItem>>> GetCartItemsByUserId(int userId)
         {
-            var result = await _CartItemService.AddCartItem(CartItem);
+            var result = await _CartItemService.GetCartItemsByUserId(userId);
+            if (result is null)
+                return NotFound("CartItems not found for the user.");
 
             return Ok(result);
         }
 
-        [HttpPut("{id}")]
-        public async Task<ActionResult<List<CartItem>>> UpdateCartItem(int id, CartItem request)
+        [HttpPost("user/{userId}")]
+        public async Task<ActionResult<List<CartItem>>> AddCartItem(CartItem CartItem, int userId)
         {
-            var result = await _CartItemService.UpdateCartItem(id, request);
+            var result = await _CartItemService.AddCartItem(CartItem, userId);
+
+            return Ok(result);
+        }
+
+        [HttpPut("{id}/user/{userId}")]
+        public async Task<ActionResult<List<CartItem>>> UpdateCartItem(int id, CartItem request, int userId)
+        {
+            var result = await _CartItemService.UpdateCartItem(id, request, userId);
             if (result is null)
                 return NotFound("CartItem not found.");
 
             return Ok(result);
         }
 
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<List<CartItem>>> DeleteCartItem(int id)
+        [HttpDelete("{id}/user/{userId}")]
+        public async Task<ActionResult<List<CartItem>>> DeleteCartItem(int id, int userId)
         {
-            var result = await _CartItemService.DeteleCartItem(id);
+            var result = await _CartItemService.DeleteCartItem(id, userId);
             if (result is null)
                 return NotFound("CartItem not found.");
 

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using petstore_vetclinic_api.Data;
+using petstore_vetclinic_api.Models.Categories;
 using petstore_vetclinic_api.Models.Products;
 
 namespace petstore_vetclinic_api.Services.ProductService
@@ -38,6 +39,12 @@ namespace petstore_vetclinic_api.Services.ProductService
             return products;
         }
 
+        public async Task<List<Product>> SearchProductsByName(string name)
+        {
+            var products = await _context.Products.Where(p => p.Name.Contains(name)).ToListAsync();
+            return products;
+        }
+
         public async Task<Product?> GetSingleProduct(int id)
         {
             var product = await _context.Products.FindAsync(id);
@@ -45,6 +52,138 @@ namespace petstore_vetclinic_api.Services.ProductService
                 return product;
 
             return product;
+        }
+
+     /*   public async Task<List<Product>?> GetProductsInSubSubcategories(int categoryId)
+        {
+            var products = new List<Product>();
+
+            var category = await _context.Categories
+                .Include(c => c.ChildCategories)
+                .ThenInclude(c => c.ChildCategories)
+                .ThenInclude(p => p.Products)
+                .FirstOrDefaultAsync(c => c.Id == categoryId);
+
+            if (category != null)
+            {
+                products.AddRange(category.Products);
+
+                foreach (var subcategory in category.ChildCategories)
+                {
+                    products.AddRange(subcategory.Products);
+
+                    foreach (var subsubcategory in subcategory.ChildCategories)
+                    {
+                        products.AddRange(subsubcategory.Products);
+                    }
+                }
+            }
+
+            return products;
+        }
+
+        public async Task<List<Product>?> GetProductsInSubSubcategoriesBySubCategory(int categoryId)
+        {
+            var products = new List<Product>();
+
+            var category = await _context.Categories
+                .Include(c => c.ChildCategories)
+                .ThenInclude(p => p.Products)
+                .FirstOrDefaultAsync(c => c.Id == categoryId);
+
+            if (category != null)
+            {
+                products.AddRange(category.Products);
+
+                foreach (var subcategory in category.ChildCategories)
+                {
+                    products.AddRange(subcategory.Products);
+
+                    foreach (var subsubcategory in subcategory.ChildCategories)
+                    {
+                        products.AddRange(subsubcategory.Products);
+                    }
+                }
+            }
+
+            return products;
+        }
+
+        public async Task<List<Product>> GetProductsInSubSubcategoriesBySubSubCategory(int categoryId)
+        {
+            var products = new List<Product>();
+
+            var subsubcategory = await _context.Categories
+                .Include(p => p.Products)
+                .FirstOrDefaultAsync(c => c.Id == categoryId);
+
+            if (subsubcategory != null)
+            {
+                products.AddRange(subsubcategory.Products);
+            }
+
+            return products;
+        }
+        */
+      
+        public async Task<List<Product>?> GetProductsByCategory(int categoryId)
+        {
+            var products = new List<Product>();
+
+            var category = await _context.Categories
+                .Include(c => c.ChildCategories)
+                    .ThenInclude(c => c.ChildCategories)
+                        .ThenInclude(p => p.Products)
+                .Include(c => c.ChildCategories)
+                    .ThenInclude(p => p.Products)
+                .Include(p => p.Products)
+                .FirstOrDefaultAsync(c => c.Id == categoryId);
+
+            if (category != null)
+            {
+                products.AddRange(category.Products);
+
+                foreach (var subcategory in category.ChildCategories)
+                {
+                    products.AddRange(subcategory.Products);
+
+                    foreach (var subsubcategory in subcategory.ChildCategories)
+                    {
+                        products.AddRange(subsubcategory.Products);
+                    }
+                }
+            }
+
+            return products;
+        }
+
+        public async Task<List<Product>> GetFilteredProducts(int categoryId, decimal? minPrice = null, decimal? maxPrice = null)
+        {
+            var products = await GetProductsByCategory(categoryId);
+
+            var filteredProducts = products.Where(p => !minPrice.HasValue || p.Price >= minPrice.Value)
+                                           .Where(p => !maxPrice.HasValue || p.Price <= maxPrice.Value)
+                                           .ToList();
+
+            return filteredProducts;
+        }
+
+        public async Task<List<Product>> SortByPriceAscending(int categoryId)
+        {
+            var products = await GetProductsByCategory(categoryId);
+
+            var sortedProducts = products.OrderBy(p => p.Price).ToList();
+
+            return sortedProducts;
+        }
+
+        public async Task<List<Product>> SortByPriceDescending(int categoryId)
+        {
+            var products = await GetProductsByCategory(categoryId);
+
+            var sortedProducts = products.OrderByDescending(p => p.Price).ToList();
+
+            return sortedProducts;
         }
 
         public async Task<List<Product>?> UpdateProduct(int id, Product request)

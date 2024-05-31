@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using petstore_vetclinic_api.Data;
+using petstore_vetclinic_api.Models.Carts;
 using petstore_vetclinic_api.Models.Favourites;
 
 namespace petstore_vetclinic_api.Services.FavouriteItemService
@@ -13,13 +14,14 @@ namespace petstore_vetclinic_api.Services.FavouriteItemService
             _context = context;
         }
 
-        public async Task<List<FavouriteItem>> AddFavouriteItem(FavouriteItem favouriteItem)
+        public async Task<List<FavouriteItem>> AddFavouriteItem(FavouriteItem favouriteItem, int userId)
         {
             _context.FavouriteItems.Add(favouriteItem);
             await _context.SaveChangesAsync();
 
             var favouriteItemsWithProducts = await _context.FavouriteItems
                 .Include(fi => fi.Products)
+                .Where(fi => fi.UserId == userId)
                 .ToListAsync();
 
             return favouriteItemsWithProducts;
@@ -29,7 +31,7 @@ namespace petstore_vetclinic_api.Services.FavouriteItemService
             //return await _context.FavouriteItems.Include(c => c.Products).ToListAsync();
         }
 
-        public async Task<List<FavouriteItem>?> DeteleFavouriteItem(int id)
+        public async Task<List<FavouriteItem>?> DeteleFavouriteItem(int id, int userId)
         {
             var favouriteItem = await _context.FavouriteItems.FindAsync(id);
             if (favouriteItem is null)
@@ -37,7 +39,13 @@ namespace petstore_vetclinic_api.Services.FavouriteItemService
 
             _context.FavouriteItems.Remove(favouriteItem);
             await _context.SaveChangesAsync();
-            return await _context.FavouriteItems.ToListAsync();
+
+            var updatedFavouriteItems = _context.FavouriteItems
+            .Where(fi => fi.UserId == userId)
+            .ToList();
+
+            // return await _context.FavouriteItems.ToListAsync();
+            return updatedFavouriteItems;
         }
 
         public async Task<List<FavouriteItem>> GetAllFavouriteItem()
@@ -53,6 +61,11 @@ namespace petstore_vetclinic_api.Services.FavouriteItemService
                 return favouriteItem;
 
             return favouriteItem;
+        }
+
+        public async Task<List<FavouriteItem>?> GetFavouriteItemsByUserId(int userId)
+        {
+            return await _context.FavouriteItems.Include(p => p.Products).Where(a => a.UserId == userId).ToListAsync();
         }
 
         public async Task<List<FavouriteItem>?> UpdateFavouriteItem(int id, FavouriteItem request)

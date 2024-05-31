@@ -4,9 +4,9 @@ using petstore_vetclinic_api.Models.Categories;
 
 namespace petstore_vetclinic_api.Services.SubcategoryService
 {
-    public class SubcategoryService : ISubcategoryService
+    public class SubcategoryService
     {
-        private readonly DataContext _context;
+       /* private readonly DataContext _context;
 
         public SubcategoryService(DataContext context)
         {
@@ -59,6 +59,6 @@ namespace petstore_vetclinic_api.Services.SubcategoryService
             await _context.SaveChangesAsync();
 
             return await _context.Subcategories.ToListAsync();
-        }
+        }*/
     }
 }

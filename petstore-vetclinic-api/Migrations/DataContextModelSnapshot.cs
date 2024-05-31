@@ -30,12 +30,23 @@ namespace petstore_vetclinic_api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("Age")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Breed")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Description")
-                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Gender")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Type")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("UserId")
@@ -48,25 +59,6 @@ namespace petstore_vetclinic_api.Migrations
                     b.ToTable("Animals");
                 });
 
-            modelBuilder.Entity("petstore_vetclinic_api.Models.Carts.Cart", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
-                    b.ToTable("Carts");
-                });
-
             modelBuilder.Entity("petstore_vetclinic_api.Models.Carts.CartItem", b =>
                 {
                     b.Property<int>("Id")
@@ -75,20 +67,20 @@ namespace petstore_vetclinic_api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CartId")
-                        .HasColumnType("int");
-
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
                     b.Property<int?>("Quantity")
                         .HasColumnType("int");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("CartId");
-
                     b.HasIndex("ProductId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("CartItems");
                 });
@@ -101,16 +93,24 @@ namespace petstore_vetclinic_api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("ImgUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("ParentCategoryId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("ParentCategoryId");
 
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("petstore_vetclinic_api.Models.Categories.Subcategory", b =>
+            modelBuilder.Entity("petstore_vetclinic_api.Models.Clinic.Application", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -118,18 +118,110 @@ namespace petstore_vetclinic_api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CategoryId")
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Applications");
+                });
+
+            modelBuilder.Entity("petstore_vetclinic_api.Models.Clinic.Appointment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("DoctorId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Phone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<TimeSpan>("Time")
+                        .HasColumnType("time");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("CategoryId");
+                    b.HasIndex("DoctorId");
 
-                    b.ToTable("Subcategories");
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Appointments");
+                });
+
+            modelBuilder.Entity("petstore_vetclinic_api.Models.Clinic.Doctor", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Specialization")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Doctors");
+                });
+
+            modelBuilder.Entity("petstore_vetclinic_api.Models.Clinic.Schedule", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("DoctorId")
+                        .HasColumnType("int");
+
+                    b.Property<TimeSpan>("EndTime")
+                        .HasColumnType("time");
+
+                    b.Property<bool>("IsAvailable")
+                        .HasColumnType("bit");
+
+                    b.Property<TimeSpan>("StartTime")
+                        .HasColumnType("time");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DoctorId");
+
+                    b.ToTable("Schedules");
                 });
 
             modelBuilder.Entity("petstore_vetclinic_api.Models.Comments.Comment", b =>
@@ -159,24 +251,6 @@ namespace petstore_vetclinic_api.Migrations
                     b.ToTable("Comments");
                 });
 
-            modelBuilder.Entity("petstore_vetclinic_api.Models.Favourites.Favourite", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Favourites");
-                });
-
             modelBuilder.Entity("petstore_vetclinic_api.Models.Favourites.FavouriteItem", b =>
                 {
                     b.Property<int>("Id")
@@ -185,19 +259,76 @@ namespace petstore_vetclinic_api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("FavouriteId")
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("FavouriteItems");
+                });
+
+            modelBuilder.Entity("petstore_vetclinic_api.Models.Orders.Order", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("OrderDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("OrderNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal?>("TotalPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("petstore_vetclinic_api.Models.Orders.OrderItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("OrderId")
                         .HasColumnType("int");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("Quantity")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("FavouriteId");
+                    b.HasIndex("OrderId");
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("FavouriteItems");
+                    b.ToTable("OrderItems");
                 });
 
             modelBuilder.Entity("petstore_vetclinic_api.Models.Products.Product", b =>
@@ -208,26 +339,127 @@ namespace petstore_vetclinic_api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("Article")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("Discount")
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("Price")
+                    b.Property<int?>("OldPrice")
                         .HasColumnType("int");
 
-                    b.Property<int>("SubcategoryId")
-                        .HasColumnType("int");
+                    b.Property<decimal?>("Price")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("imgUrl")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SubcategoryId");
+                    b.HasIndex("CategoryId");
 
                     b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("petstore_vetclinic_api.Models.Products.ProductAdvantage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Advantage")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId")
+                        .IsUnique();
+
+                    b.ToTable("ProductAdvantages");
+                });
+
+            modelBuilder.Entity("petstore_vetclinic_api.Models.Products.ProductCharacteristics", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Characteristics")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId")
+                        .IsUnique();
+
+                    b.ToTable("ProductCharacteristics");
+                });
+
+            modelBuilder.Entity("petstore_vetclinic_api.Models.Products.ProductComposition", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Composition")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId")
+                        .IsUnique();
+
+                    b.ToTable("ProductCompositions");
+                });
+
+            modelBuilder.Entity("petstore_vetclinic_api.Models.Products.ProductDescription", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId")
+                        .IsUnique();
+
+                    b.ToTable("productDescriptions");
                 });
 
             modelBuilder.Entity("petstore_vetclinic_api.Models.Products.ProductImg", b =>
@@ -249,6 +481,49 @@ namespace petstore_vetclinic_api.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("ProductImgs");
+                });
+
+            modelBuilder.Entity("petstore_vetclinic_api.Models.Products.ProductNutritionalValue", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("NutritionalValue")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId")
+                        .IsUnique();
+
+                    b.ToTable("ProductNutritionalValues");
+                });
+
+            modelBuilder.Entity("petstore_vetclinic_api.Models.Users.Role", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Roles");
                 });
 
             modelBuilder.Entity("petstore_vetclinic_api.Models.Users.User", b =>
@@ -275,11 +550,19 @@ namespace petstore_vetclinic_api.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Phone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("RoleId")
+                        .HasColumnType("int");
+
                     b.Property<string>("UserName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
 
                     b.ToTable("Users");
                 });
@@ -313,45 +596,58 @@ namespace petstore_vetclinic_api.Migrations
                     b.Navigation("Users");
                 });
 
-            modelBuilder.Entity("petstore_vetclinic_api.Models.Carts.Cart", b =>
-                {
-                    b.HasOne("petstore_vetclinic_api.Models.Users.User", "Users")
-                        .WithOne("Carts")
-                        .HasForeignKey("petstore_vetclinic_api.Models.Carts.Cart", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Users");
-                });
-
             modelBuilder.Entity("petstore_vetclinic_api.Models.Carts.CartItem", b =>
                 {
-                    b.HasOne("petstore_vetclinic_api.Models.Carts.Cart", "Carts")
-                        .WithMany("CartItems")
-                        .HasForeignKey("CartId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("petstore_vetclinic_api.Models.Products.Product", "Products")
                         .WithMany("CartItems")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Carts");
-
-                    b.Navigation("Products");
-                });
-
-            modelBuilder.Entity("petstore_vetclinic_api.Models.Categories.Subcategory", b =>
-                {
-                    b.HasOne("petstore_vetclinic_api.Models.Categories.Category", "Categories")
-                        .WithMany("Subcategories")
-                        .HasForeignKey("CategoryId")
+                    b.HasOne("petstore_vetclinic_api.Models.Users.User", "Users")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Categories");
+                    b.Navigation("Products");
+
+                    b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("petstore_vetclinic_api.Models.Categories.Category", b =>
+                {
+                    b.HasOne("petstore_vetclinic_api.Models.Categories.Category", "ParentCategory")
+                        .WithMany("ChildCategories")
+                        .HasForeignKey("ParentCategoryId");
+
+                    b.Navigation("ParentCategory");
+                });
+
+            modelBuilder.Entity("petstore_vetclinic_api.Models.Clinic.Appointment", b =>
+                {
+                    b.HasOne("petstore_vetclinic_api.Models.Clinic.Doctor", "Doctor")
+                        .WithMany()
+                        .HasForeignKey("DoctorId");
+
+                    b.HasOne("petstore_vetclinic_api.Models.Users.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Doctor");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("petstore_vetclinic_api.Models.Clinic.Schedule", b =>
+                {
+                    b.HasOne("petstore_vetclinic_api.Models.Clinic.Doctor", "Doctor")
+                        .WithMany()
+                        .HasForeignKey("DoctorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Doctor");
                 });
 
             modelBuilder.Entity("petstore_vetclinic_api.Models.Comments.Comment", b =>
@@ -373,45 +669,108 @@ namespace petstore_vetclinic_api.Migrations
                     b.Navigation("Users");
                 });
 
-            modelBuilder.Entity("petstore_vetclinic_api.Models.Favourites.Favourite", b =>
-                {
-                    b.HasOne("petstore_vetclinic_api.Models.Users.User", "Users")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Users");
-                });
-
             modelBuilder.Entity("petstore_vetclinic_api.Models.Favourites.FavouriteItem", b =>
                 {
-                    b.HasOne("petstore_vetclinic_api.Models.Favourites.Favourite", "Favourites")
-                        .WithMany("FavouriteItems")
-                        .HasForeignKey("FavouriteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("petstore_vetclinic_api.Models.Products.Product", "Products")
                         .WithMany("FavouriteItems")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Favourites");
+                    b.HasOne("petstore_vetclinic_api.Models.Users.User", "Users")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Products");
+
+                    b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("petstore_vetclinic_api.Models.Orders.Order", b =>
+                {
+                    b.HasOne("petstore_vetclinic_api.Models.Users.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("petstore_vetclinic_api.Models.Orders.OrderItem", b =>
+                {
+                    b.HasOne("petstore_vetclinic_api.Models.Orders.Order", "Order")
+                        .WithMany("OrderItems")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("petstore_vetclinic_api.Models.Products.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Order");
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("petstore_vetclinic_api.Models.Products.Product", b =>
                 {
-                    b.HasOne("petstore_vetclinic_api.Models.Categories.Subcategory", "Subcategories")
+                    b.HasOne("petstore_vetclinic_api.Models.Categories.Category", "Categories")
                         .WithMany("Products")
-                        .HasForeignKey("SubcategoryId")
+                        .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Subcategories");
+                    b.Navigation("Categories");
+                });
+
+            modelBuilder.Entity("petstore_vetclinic_api.Models.Products.ProductAdvantage", b =>
+                {
+                    b.HasOne("petstore_vetclinic_api.Models.Products.Product", "Product")
+                        .WithOne("ProductAdvantage")
+                        .HasForeignKey("petstore_vetclinic_api.Models.Products.ProductAdvantage", "ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("petstore_vetclinic_api.Models.Products.ProductCharacteristics", b =>
+                {
+                    b.HasOne("petstore_vetclinic_api.Models.Products.Product", "Product")
+                        .WithOne("ProductCharacteristic")
+                        .HasForeignKey("petstore_vetclinic_api.Models.Products.ProductCharacteristics", "ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("petstore_vetclinic_api.Models.Products.ProductComposition", b =>
+                {
+                    b.HasOne("petstore_vetclinic_api.Models.Products.Product", "Product")
+                        .WithOne("ProductComposition")
+                        .HasForeignKey("petstore_vetclinic_api.Models.Products.ProductComposition", "ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("petstore_vetclinic_api.Models.Products.ProductDescription", b =>
+                {
+                    b.HasOne("petstore_vetclinic_api.Models.Products.Product", "Product")
+                        .WithOne("ProductDescription")
+                        .HasForeignKey("petstore_vetclinic_api.Models.Products.ProductDescription", "ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("petstore_vetclinic_api.Models.Products.ProductImg", b =>
@@ -425,6 +784,26 @@ namespace petstore_vetclinic_api.Migrations
                     b.Navigation("Products");
                 });
 
+            modelBuilder.Entity("petstore_vetclinic_api.Models.Products.ProductNutritionalValue", b =>
+                {
+                    b.HasOne("petstore_vetclinic_api.Models.Products.Product", "Product")
+                        .WithOne("ProductNutritionalValue")
+                        .HasForeignKey("petstore_vetclinic_api.Models.Products.ProductNutritionalValue", "ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("petstore_vetclinic_api.Models.Users.User", b =>
+                {
+                    b.HasOne("petstore_vetclinic_api.Models.Users.Role", "Roles")
+                        .WithMany("Users")
+                        .HasForeignKey("RoleId");
+
+                    b.Navigation("Roles");
+                });
+
             modelBuilder.Entity("petstore_vetclinic_api.Models.Users.UserDto", b =>
                 {
                     b.HasOne("petstore_vetclinic_api.Models.Users.User", "Users")
@@ -436,24 +815,16 @@ namespace petstore_vetclinic_api.Migrations
                     b.Navigation("Users");
                 });
 
-            modelBuilder.Entity("petstore_vetclinic_api.Models.Carts.Cart", b =>
-                {
-                    b.Navigation("CartItems");
-                });
-
             modelBuilder.Entity("petstore_vetclinic_api.Models.Categories.Category", b =>
                 {
-                    b.Navigation("Subcategories");
-                });
+                    b.Navigation("ChildCategories");
 
-            modelBuilder.Entity("petstore_vetclinic_api.Models.Categories.Subcategory", b =>
-                {
                     b.Navigation("Products");
                 });
 
-            modelBuilder.Entity("petstore_vetclinic_api.Models.Favourites.Favourite", b =>
+            modelBuilder.Entity("petstore_vetclinic_api.Models.Orders.Order", b =>
                 {
-                    b.Navigation("FavouriteItems");
+                    b.Navigation("OrderItems");
                 });
 
             modelBuilder.Entity("petstore_vetclinic_api.Models.Products.Product", b =>
@@ -464,14 +835,32 @@ namespace petstore_vetclinic_api.Migrations
 
                     b.Navigation("FavouriteItems");
 
+                    b.Navigation("ProductAdvantage")
+                        .IsRequired();
+
+                    b.Navigation("ProductCharacteristic")
+                        .IsRequired();
+
+                    b.Navigation("ProductComposition")
+                        .IsRequired();
+
+                    b.Navigation("ProductDescription")
+                        .IsRequired();
+
                     b.Navigation("ProductImgs");
+
+                    b.Navigation("ProductNutritionalValue")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("petstore_vetclinic_api.Models.Users.Role", b =>
+                {
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("petstore_vetclinic_api.Models.Users.User", b =>
                 {
                     b.Navigation("Animals");
-
-                    b.Navigation("Carts");
 
                     b.Navigation("Comments");
 

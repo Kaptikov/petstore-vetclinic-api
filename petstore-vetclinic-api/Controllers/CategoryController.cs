@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using petstore_vetclinic_api.Models.Categories;
+using petstore_vetclinic_api.Models.Products;
 using petstore_vetclinic_api.Services.CategoryService;
 
 namespace petstore_vetclinic_api.Controllers
@@ -31,6 +32,33 @@ namespace petstore_vetclinic_api.Controllers
 
             return Ok(result);
         }
+
+        [HttpGet("categories")]
+        public async Task<ActionResult<List<Category>>> GetCategory()
+        {
+            return await _CategoryService.GetCategory();
+        }
+
+
+        [HttpGet("subcategories/{parentId}")]
+        public async Task<ActionResult<List<Category>>> GetSubcategories(int parentId)
+        {
+            return await _CategoryService.GetSubcategories(parentId);
+        }
+
+        [HttpGet("subsubcategories/{parentId}")]
+        public async Task<ActionResult<List<Category>>> GetSubSubcategories(int parentId)
+        {
+            return await _CategoryService.GetSubSubcategories(parentId);
+        }
+
+
+      /*  [HttpGet("subcategory/{parentId}")]
+        public async Task<ActionResult<List<Category>>> GetAllSubcategories(int parentId)
+        {
+            var subcategories = await _CategoryService.GetAllSubcategories(parentId);
+            return Ok(subcategories);
+        }*/
 
         [HttpPost]
         public async Task<ActionResult<List<Category>>> AddCategory(Category Category)
