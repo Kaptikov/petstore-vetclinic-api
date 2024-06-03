@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using petstore_vetclinic_api.Data;
 
@@ -11,9 +12,11 @@ using petstore_vetclinic_api.Data;
 namespace petstore_vetclinic_api.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240603103058_AddTableScheduleTime")]
+    partial class AddTableScheduleTime
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,6 +24,21 @@ namespace petstore_vetclinic_api.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("ScheduleScheduleTime", b =>
+                {
+                    b.Property<int>("ScheduleTimesId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SchedulesId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ScheduleTimesId", "SchedulesId");
+
+                    b.HasIndex("SchedulesId");
+
+                    b.ToTable("ScheduleScheduleTime");
+                });
 
             modelBuilder.Entity("petstore_vetclinic_api.Models.Animals.Animal", b =>
                 {
@@ -213,20 +231,30 @@ namespace petstore_vetclinic_api.Migrations
                     b.Property<int>("DoctorId")
                         .HasColumnType("int");
 
-                    b.Property<TimeSpan>("EndTime")
-                        .HasColumnType("time");
-
                     b.Property<bool>("IsAvailable")
                         .HasColumnType("bit");
-
-                    b.Property<TimeSpan>("StartTime")
-                        .HasColumnType("time");
 
                     b.HasKey("Id");
 
                     b.HasIndex("DoctorId");
 
                     b.ToTable("Schedules");
+                });
+
+            modelBuilder.Entity("petstore_vetclinic_api.Models.Clinic.ScheduleTime", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<TimeSpan>("Time")
+                        .HasColumnType("time");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ScheduleTime");
                 });
 
             modelBuilder.Entity("petstore_vetclinic_api.Models.Comments.Comment", b =>
@@ -588,6 +616,21 @@ namespace petstore_vetclinic_api.Migrations
                     b.HasKey("UserId");
 
                     b.ToTable("UserDtos");
+                });
+
+            modelBuilder.Entity("ScheduleScheduleTime", b =>
+                {
+                    b.HasOne("petstore_vetclinic_api.Models.Clinic.ScheduleTime", null)
+                        .WithMany()
+                        .HasForeignKey("ScheduleTimesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("petstore_vetclinic_api.Models.Clinic.Schedule", null)
+                        .WithMany()
+                        .HasForeignKey("SchedulesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("petstore_vetclinic_api.Models.Animals.Animal", b =>

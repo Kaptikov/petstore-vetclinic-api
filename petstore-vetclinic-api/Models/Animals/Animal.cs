@@ -1,4 +1,6 @@
-﻿using petstore_vetclinic_api.Models.Users;
+﻿using petstore_vetclinic_api.Models.Clinic;
+using petstore_vetclinic_api.Models.Users;
+using System.Text.Json.Serialization;
 
 namespace petstore_vetclinic_api.Models.Animals
 {
@@ -13,5 +15,7 @@ namespace petstore_vetclinic_api.Models.Animals
         public string? Breed { get; set; }
         public int UserId { get; set; }
         public User? Users { get; set; }
+        [JsonIgnore]
+        public List<Appointment> Appointments { get; set; } = new List<Appointment>();
     }
 }

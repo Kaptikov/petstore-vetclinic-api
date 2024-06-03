@@ -1,9 +1,12 @@
-﻿namespace petstore_vetclinic_api.Models.Clinic
+﻿using System.Text.Json.Serialization;
+
+namespace petstore_vetclinic_api.Models.Clinic
 {
     public class Schedule
     {
         public int Id { get; set; }
         public int DoctorId { get; set; }
+        [JsonIgnore]
         public Doctor? Doctor { get; set; }
         public DateTime Date { get; set; }
         public TimeSpan StartTime { get; set; }

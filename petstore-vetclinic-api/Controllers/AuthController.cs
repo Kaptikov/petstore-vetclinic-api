@@ -44,7 +44,8 @@ namespace petstore_vetclinic_api.Controllers
             User newUser = new User
             {
                 UserName = request.UserName,
-                PasswordHash = passwordHash
+                PasswordHash = passwordHash,
+                RoleId = 3,
             };
 
             _context.Users.Add(newUser);

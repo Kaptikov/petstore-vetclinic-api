@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using petstore_vetclinic_api.Data;
 
@@ -11,9 +12,11 @@ using petstore_vetclinic_api.Data;
 namespace petstore_vetclinic_api.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240602151148_ChangeTableAppointment")]
+    partial class ChangeTableAppointment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -632,7 +635,7 @@ namespace petstore_vetclinic_api.Migrations
             modelBuilder.Entity("petstore_vetclinic_api.Models.Clinic.Appointment", b =>
                 {
                     b.HasOne("petstore_vetclinic_api.Models.Animals.Animal", "Animal")
-                        .WithMany("Appointments")
+                        .WithMany()
                         .HasForeignKey("AnimalId");
 
                     b.HasOne("petstore_vetclinic_api.Models.Clinic.Doctor", "Doctor")
@@ -640,7 +643,7 @@ namespace petstore_vetclinic_api.Migrations
                         .HasForeignKey("DoctorId");
 
                     b.HasOne("petstore_vetclinic_api.Models.Users.User", "User")
-                        .WithMany("Appointments")
+                        .WithMany()
                         .HasForeignKey("UserId");
 
                     b.Navigation("Animal");
@@ -828,11 +831,6 @@ namespace petstore_vetclinic_api.Migrations
                     b.Navigation("Users");
                 });
 
-            modelBuilder.Entity("petstore_vetclinic_api.Models.Animals.Animal", b =>
-                {
-                    b.Navigation("Appointments");
-                });
-
             modelBuilder.Entity("petstore_vetclinic_api.Models.Categories.Category", b =>
                 {
                     b.Navigation("ChildCategories");
@@ -884,8 +882,6 @@ namespace petstore_vetclinic_api.Migrations
             modelBuilder.Entity("petstore_vetclinic_api.Models.Users.User", b =>
                 {
                     b.Navigation("Animals");
-
-                    b.Navigation("Appointments");
 
                     b.Navigation("Comments");
 

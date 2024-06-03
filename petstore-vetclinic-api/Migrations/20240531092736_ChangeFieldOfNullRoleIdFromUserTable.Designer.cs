@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using petstore_vetclinic_api.Data;
 
@@ -11,9 +12,11 @@ using petstore_vetclinic_api.Data;
 namespace petstore_vetclinic_api.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240531092736_ChangeFieldOfNullRoleIdFromUserTable")]
+    partial class ChangeFieldOfNullRoleIdFromUserTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -145,9 +148,6 @@ namespace petstore_vetclinic_api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("AnimalId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
@@ -168,8 +168,6 @@ namespace petstore_vetclinic_api.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AnimalId");
 
                     b.HasIndex("DoctorId");
 
@@ -631,19 +629,13 @@ namespace petstore_vetclinic_api.Migrations
 
             modelBuilder.Entity("petstore_vetclinic_api.Models.Clinic.Appointment", b =>
                 {
-                    b.HasOne("petstore_vetclinic_api.Models.Animals.Animal", "Animal")
-                        .WithMany("Appointments")
-                        .HasForeignKey("AnimalId");
-
                     b.HasOne("petstore_vetclinic_api.Models.Clinic.Doctor", "Doctor")
                         .WithMany()
                         .HasForeignKey("DoctorId");
 
                     b.HasOne("petstore_vetclinic_api.Models.Users.User", "User")
-                        .WithMany("Appointments")
+                        .WithMany()
                         .HasForeignKey("UserId");
-
-                    b.Navigation("Animal");
 
                     b.Navigation("Doctor");
 
@@ -653,7 +645,7 @@ namespace petstore_vetclinic_api.Migrations
             modelBuilder.Entity("petstore_vetclinic_api.Models.Clinic.Schedule", b =>
                 {
                     b.HasOne("petstore_vetclinic_api.Models.Clinic.Doctor", "Doctor")
-                        .WithMany("Schedules")
+                        .WithMany()
                         .HasForeignKey("DoctorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -828,21 +820,11 @@ namespace petstore_vetclinic_api.Migrations
                     b.Navigation("Users");
                 });
 
-            modelBuilder.Entity("petstore_vetclinic_api.Models.Animals.Animal", b =>
-                {
-                    b.Navigation("Appointments");
-                });
-
             modelBuilder.Entity("petstore_vetclinic_api.Models.Categories.Category", b =>
                 {
                     b.Navigation("ChildCategories");
 
                     b.Navigation("Products");
-                });
-
-            modelBuilder.Entity("petstore_vetclinic_api.Models.Clinic.Doctor", b =>
-                {
-                    b.Navigation("Schedules");
                 });
 
             modelBuilder.Entity("petstore_vetclinic_api.Models.Orders.Order", b =>
@@ -884,8 +866,6 @@ namespace petstore_vetclinic_api.Migrations
             modelBuilder.Entity("petstore_vetclinic_api.Models.Users.User", b =>
                 {
                     b.Navigation("Animals");
-
-                    b.Navigation("Appointments");
 
                     b.Navigation("Comments");
 

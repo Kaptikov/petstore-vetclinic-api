@@ -5,14 +5,17 @@ using Microsoft.OpenApi.Models;
 using petstore_vetclinic_api.Data;
 using petstore_vetclinic_api.Services.Animals;
 using petstore_vetclinic_api.Services.ApplicationService;
+using petstore_vetclinic_api.Services.AppointmentService;
 using petstore_vetclinic_api.Services.CartItemService;
 using petstore_vetclinic_api.Services.CartService;
 using petstore_vetclinic_api.Services.CategoryService;
+using petstore_vetclinic_api.Services.DoctorService;
 using petstore_vetclinic_api.Services.FavouriteItemService;
 using petstore_vetclinic_api.Services.FavouriteService;
 using petstore_vetclinic_api.Services.OrderService;
 using petstore_vetclinic_api.Services.ProductImgService;
 using petstore_vetclinic_api.Services.ProductService;
+using petstore_vetclinic_api.Services.ScheduleService;
 using petstore_vetclinic_api.Services.SubcategoryService;
 using petstore_vetclinic_api.Services.UserService;
 using Swashbuckle.AspNetCore.Filters;
@@ -35,6 +38,9 @@ builder.Services.AddScoped<ICartItemService, CartItemService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IAnimalService, AnimalService>();
 builder.Services.AddScoped<IApplicationService, ApplicationService>();
+builder.Services.AddScoped<IScheduleService, ScheduleService>();
+builder.Services.AddScoped<IDoctorService, DoctorService>();
+builder.Services.AddScoped<IAppointmentService, AppointmentService>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
