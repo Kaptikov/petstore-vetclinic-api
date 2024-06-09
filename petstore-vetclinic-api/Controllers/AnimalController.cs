@@ -43,10 +43,10 @@ namespace petstore_vetclinic_api.Controllers
             return Ok(result);
         }
 
-        [HttpPost]
-        public async Task<ActionResult<List<Animal>>> AddAnimal(Animal animal)
+        [HttpPost("user/{userId}")]
+        public async Task<ActionResult<List<Animal>>> AddAnimal(Animal animal, int userId)
         {
-            var result = await _animalService.AddAnimal(animal);
+            var result = await _animalService.AddAnimal(animal, userId);
 
             return Ok(result);
         }
@@ -61,10 +61,10 @@ namespace petstore_vetclinic_api.Controllers
             return Ok(result);
         }
 
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<List<Animal>>> DeleteAnimal(int id)
+        [HttpDelete("animal/{id}/user/{userId}")]
+        public async Task<ActionResult<List<Animal>>> DeleteAnimal(int id, int userId)
         {
-            var result = await _animalService.DeteleAnimal(id);
+            var result = await _animalService.DeteleAnimal(id, userId);
             if (result is null)
                 return NotFound("Animal not found.");
 

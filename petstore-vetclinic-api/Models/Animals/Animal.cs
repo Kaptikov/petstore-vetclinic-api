@@ -13,6 +13,7 @@ namespace petstore_vetclinic_api.Models.Animals
         public string? Gender { get; set; }
         public int? Age { get; set; }
         public string? Breed { get; set; }
+        public string? imgUrl { get; set; }
         public int UserId { get; set; }
         public User? Users { get; set; }
         [JsonIgnore]

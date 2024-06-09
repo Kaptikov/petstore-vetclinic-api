@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using petstore_vetclinic_api.Data;
 using petstore_vetclinic_api.Models.Animals;
+using petstore_vetclinic_api.Models.Carts;
 
 namespace petstore_vetclinic_api.Services.Animals
 {
@@ -13,18 +14,24 @@ namespace petstore_vetclinic_api.Services.Animals
             _context = context;
         }
 
-        public async Task<List<Animal>> AddAnimal(Animal animal)
+        public async Task<List<Animal>> AddAnimal(Animal animal, int userId)
         {
            
             _context.Animals.Add(animal);
             await _context.SaveChangesAsync();
 
-            Console.WriteLine("Animal added: " + animal.Name);
+            //Console.WriteLine("Animal added: " + animal.Name);
 
-            return await _context.Animals.ToListAsync();
+            //return await _context.Animals.ToListAsync();
+
+            var updatedAnimals = await _context.Animals
+                .Where(fi => fi.UserId == userId)
+                .ToListAsync();
+
+            return updatedAnimals;
         }
 
-        public async Task<List<Animal>?> DeteleAnimal(int id)
+        public async Task<List<Animal>?> DeteleAnimal(int id, int userId)
         {
             var animal = await _context.Animals.FindAsync(id);
             if (animal is null)
@@ -32,7 +39,10 @@ namespace petstore_vetclinic_api.Services.Animals
 
             _context.Animals.Remove(animal);
             await _context.SaveChangesAsync();
-            return await _context.Animals.ToListAsync();
+            var updatedAnimals= _context.Animals
+           .Where(fi => fi.UserId == userId)
+           .ToList();
+            return updatedAnimals;
         }
 
         public async Task<List<Animal>> GetAllAnimals()

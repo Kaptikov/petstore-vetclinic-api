@@ -3,25 +3,25 @@ using petstore_vetclinic_api.Data;
 using petstore_vetclinic_api.Models.Carts;
 using petstore_vetclinic_api.Models.Clinic;
 
-namespace petstore_vetclinic_api.Services.ApplicationService
+namespace petstore_vetclinic_api.Services.RequestService
 {
-    public class ApplicationService : IApplicationService
+    public class RequestService : IRequestService
     {
         private readonly DataContext _context;
 
-        public ApplicationService(DataContext context)
+        public RequestService(DataContext context)
         {
             _context = context;
         }
 
-        public async Task<List<Application>> AddApplication(Application application)
+        public async Task<List<Request>> AddRequests(Request request)
         {
-            _context.Applications.Add(application);
+            _context.Requests.Add(request);
             await _context.SaveChangesAsync();
 
-            var applications = await _context.Applications.ToListAsync();
+            var requests = await _context.Requests.ToListAsync();
 
-            return applications;
+            return requests;
         }
 
        /* public async Task<List<Application>?> DeleteApplication(int id, int userId)
@@ -39,10 +39,10 @@ namespace petstore_vetclinic_api.Services.ApplicationService
             return updatedApplications;
         }*/
 
-        public async Task<List<Application>> GetAllApplication()
+        public async Task<List<Request>> GetAllRequest()
         {
-            var applications = await _context.Applications.ToListAsync();
-            return applications;
+            var requests = await _context.Requests.ToListAsync();
+            return requests;
         }
 
       /*  public async Task<Application?> GetSingleCartItem(int id)

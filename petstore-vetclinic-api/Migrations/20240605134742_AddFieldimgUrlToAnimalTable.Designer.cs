@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using petstore_vetclinic_api.Data;
 
@@ -11,9 +12,11 @@ using petstore_vetclinic_api.Data;
 namespace petstore_vetclinic_api.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240605134742_AddFieldimgUrlToAnimalTable")]
+    partial class AddFieldimgUrlToAnimalTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -230,6 +233,33 @@ namespace petstore_vetclinic_api.Migrations
                     b.HasIndex("DoctorId");
 
                     b.ToTable("Schedules");
+                });
+
+            modelBuilder.Entity("petstore_vetclinic_api.Models.Comments.Comment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("petstore_vetclinic_api.Models.Favourites.FavouriteItem", b =>
@@ -487,36 +517,6 @@ namespace petstore_vetclinic_api.Migrations
                     b.ToTable("ProductNutritionalValues");
                 });
 
-            modelBuilder.Entity("petstore_vetclinic_api.Models.Reviews.Review", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Reviews");
-                });
-
             modelBuilder.Entity("petstore_vetclinic_api.Models.Users.Role", b =>
                 {
                     b.Property<int>("Id")
@@ -667,6 +667,25 @@ namespace petstore_vetclinic_api.Migrations
                     b.Navigation("Doctor");
                 });
 
+            modelBuilder.Entity("petstore_vetclinic_api.Models.Comments.Comment", b =>
+                {
+                    b.HasOne("petstore_vetclinic_api.Models.Products.Product", "Products")
+                        .WithMany("Comments")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("petstore_vetclinic_api.Models.Users.User", "Users")
+                        .WithMany("Comments")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Products");
+
+                    b.Navigation("Users");
+                });
+
             modelBuilder.Entity("petstore_vetclinic_api.Models.Favourites.FavouriteItem", b =>
                 {
                     b.HasOne("petstore_vetclinic_api.Models.Products.Product", "Products")
@@ -793,25 +812,6 @@ namespace petstore_vetclinic_api.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("petstore_vetclinic_api.Models.Reviews.Review", b =>
-                {
-                    b.HasOne("petstore_vetclinic_api.Models.Products.Product", "Products")
-                        .WithMany("Reviews")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("petstore_vetclinic_api.Models.Users.User", "Users")
-                        .WithMany("Reviews")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Products");
-
-                    b.Navigation("Users");
-                });
-
             modelBuilder.Entity("petstore_vetclinic_api.Models.Users.User", b =>
                 {
                     b.HasOne("petstore_vetclinic_api.Models.Users.Role", "Roles")
@@ -860,6 +860,8 @@ namespace petstore_vetclinic_api.Migrations
                 {
                     b.Navigation("CartItems");
 
+                    b.Navigation("Comments");
+
                     b.Navigation("FavouriteItems");
 
                     b.Navigation("ProductAdvantage")
@@ -878,8 +880,6 @@ namespace petstore_vetclinic_api.Migrations
 
                     b.Navigation("ProductNutritionalValue")
                         .IsRequired();
-
-                    b.Navigation("Reviews");
                 });
 
             modelBuilder.Entity("petstore_vetclinic_api.Models.Users.Role", b =>
@@ -893,7 +893,7 @@ namespace petstore_vetclinic_api.Migrations
 
                     b.Navigation("Appointments");
 
-                    b.Navigation("Reviews");
+                    b.Navigation("Comments");
 
                     b.Navigation("UserDtos");
                 });

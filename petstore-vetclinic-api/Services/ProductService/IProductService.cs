@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using petstore_vetclinic_api.Models.Products;
+using petstore_vetclinic_api.Models.Reviews;
 
 namespace petstore_vetclinic_api.Services.ProductService
 {
@@ -20,5 +21,8 @@ namespace petstore_vetclinic_api.Services.ProductService
         Task<List<Product>?> UpdateProduct(int id, Product request);
 
         Task<List<Product>?> DeteleProduct(int id);
+        Task<Product> AddReview(Review review, int userId, int productId);
+        Task<Product> DeleteReview(int reviewId, int userId);
+        Task<Product> DeleteAnyReview(int reviewId);
     }
 }

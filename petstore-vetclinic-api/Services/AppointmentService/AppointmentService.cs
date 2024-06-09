@@ -45,7 +45,11 @@ namespace petstore_vetclinic_api.Services.AppointmentService
 
         public async Task<List<Appointment>?> GetAllAppointmentsByUserId(int userId)
         {
-            return await _context.Appointments.Where(a => a.UserId == userId).ToListAsync();
+            return await _context.Appointments
+                .Include(a => a.Animal)
+                .Include(a => a.Doctor)
+                .Where(a => a.UserId == userId)
+                .ToListAsync();
         }
     }
 }

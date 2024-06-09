@@ -3,10 +3,10 @@ using petstore_vetclinic_api.Models.Animals;
 using petstore_vetclinic_api.Models.Carts;
 using petstore_vetclinic_api.Models.Categories;
 using petstore_vetclinic_api.Models.Clinic;
-using petstore_vetclinic_api.Models.Comments;
 using petstore_vetclinic_api.Models.Favourites;
 using petstore_vetclinic_api.Models.Orders;
 using petstore_vetclinic_api.Models.Products;
+using petstore_vetclinic_api.Models.Reviews;
 using petstore_vetclinic_api.Models.Users;
 
 namespace petstore_vetclinic_api.Data
@@ -25,7 +25,7 @@ namespace petstore_vetclinic_api.Data
         public DbSet<ProductComposition> ProductCompositions { get; set; }
         public DbSet<ProductDescription> productDescriptions { get; set; }
         public DbSet<ProductNutritionalValue> ProductNutritionalValues { get; set; }
-        public DbSet<Comment> Comments { get; set; }
+        public DbSet<Review> Reviews { get; set; }
         //public DbSet<Favourite> Favourites { get; set; }
         public DbSet<FavouriteItem> FavouriteItems { get; set; }
        // public DbSet<Cart> Carts { get; set; }
@@ -38,6 +38,6 @@ namespace petstore_vetclinic_api.Data
         public DbSet<Schedule> Schedules { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
-        public DbSet<Application> Applications { get; set; }
+        public DbSet<Request> Requests { get; set; }
     }
 }

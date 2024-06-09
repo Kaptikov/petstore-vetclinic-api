@@ -115,7 +115,7 @@ namespace petstore_vetclinic_api.Controllers
         {
             var userName = User.Identity.Name;
 
-            var user = _context.Users.FirstOrDefault(u => u.UserName == userName);
+            var user = _context.Users.Include(r => r.Roles).FirstOrDefault(u => u.UserName == userName);
 
             if (user == null)
             {

@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using petstore_vetclinic_api.Models.Animals;
 using petstore_vetclinic_api.Models.Products;
+using petstore_vetclinic_api.Models.Reviews;
 using petstore_vetclinic_api.Services.ProductService;
 
 namespace petstore_vetclinic_api.Controllers
@@ -161,6 +164,35 @@ namespace petstore_vetclinic_api.Controllers
                 return NotFound("Product not found.");
 
             return Ok(result);
+        }
+
+        [HttpPost("user/{userId}/product/{productId}")]
+        public async Task<ActionResult<Product>> AddReview(Review review, int userId, int productId)
+        {
+            var result = await _ProductService.AddReview(review, userId, productId);
+
+            return Ok(result);
+        }
+
+        [HttpDelete("review/{reviewId}/user/{userId}")]
+        public async Task<ActionResult<Product>> DeleteReview(int reviewId, int userId)
+        {
+            var results = await _ProductService.DeleteReview(reviewId, userId);
+            if (results is null)
+                return NotFound("Review not found.");
+
+            return Ok(results);
+        }
+
+
+        [HttpDelete("review/{reviewId}"), Authorize(Roles = "Admin")]
+        public async Task<ActionResult<Product>> DeleteAnyReview(int reviewId)
+        {
+            var results = await _ProductService.DeleteAnyReview(reviewId);
+            if (results is null)
+                return NotFound("Review not found.");
+
+            return Ok(results);
         }
     }
 }
