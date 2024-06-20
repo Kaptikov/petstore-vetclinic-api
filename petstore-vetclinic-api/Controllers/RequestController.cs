@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using petstore_vetclinic_api.Models.Clinic;
 using petstore_vetclinic_api.Services.RequestService;
@@ -16,7 +17,7 @@ namespace petstore_vetclinic_api.Controllers
             _requestService = requestService;
         }
 
-        [HttpGet]
+        [HttpGet, Authorize(Roles = "Admin")]
         public async Task<ActionResult<List<Request>>> GetAllRequest()
         {
             return await _requestService.GetAllRequest();
@@ -26,6 +27,22 @@ namespace petstore_vetclinic_api.Controllers
         public async Task<ActionResult<List<Request>>> AddRequests(Request request)
         {
             var result = await _requestService.AddRequests(request);
+
+            return Ok(result);
+        }
+
+        [HttpPut("{id}"), Authorize(Roles = "Admin")]
+        public async Task<ActionResult<List<Request>>> UpdateRequest(int id, Request request)
+        {
+            var result = await _requestService.UpdateRequest(id, request);
+
+            return Ok(result);
+        }
+
+        [HttpDelete("{id}"), Authorize(Roles = "Admin")]
+        public async Task<ActionResult<List<Request>>> DeleteRequest(int id)
+        {
+            var result = await _requestService.DeleteRequest(id);
 
             return Ok(result);
         }

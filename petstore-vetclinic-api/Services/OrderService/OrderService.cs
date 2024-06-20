@@ -8,7 +8,7 @@ namespace petstore_vetclinic_api.Services.OrderService
     public class OrderService : IOrderService
     {
         private readonly DataContext _context;
-
+        private readonly Random _random = new Random();
         public OrderService(DataContext context)
         {
             _context = context;
@@ -16,6 +16,7 @@ namespace petstore_vetclinic_api.Services.OrderService
 
         public async Task<Order> AddOrder(Order order)
         {
+
             _context.Orders.Add(order);
             await _context.SaveChangesAsync();
 
@@ -28,10 +29,25 @@ namespace petstore_vetclinic_api.Services.OrderService
                 OrderId = order.Id
             });
 
+            int orderId = order.Id;
+
+            order.OrderNumber = orderId.ToString();
+
             _context.OrderItems.AddRange(orderItems);
             await _context.SaveChangesAsync();
 
             return await _context.Orders.Include(o => o.OrderItems).FirstOrDefaultAsync(o => o.Id == order.Id);
+        }
+
+        private string GenerateRandomOrderNumber()
+        {
+            // Генерация случайного числа от 1000 до 9999
+            int randomNumber = _random.Next(1000, 10000);
+
+            // Преобразование числа в строку с ведущими нулями
+            string orderNumber = randomNumber.ToString("D4");
+
+            return orderNumber;
         }
 
         public async Task<List<Order>?> DeleteOrder(int id)
@@ -42,12 +58,12 @@ namespace petstore_vetclinic_api.Services.OrderService
 
             _context.Orders.Remove(order);
             await _context.SaveChangesAsync();
-            return await _context.Orders.ToListAsync();
+            return await _context.Orders.Include(c => c.User).Include(c => c.OrderItems).ToListAsync();
         }
 
         public async Task<List<Order>> GetAllOrder()
         {
-            var orders = await _context.Orders.Include(c => c.OrderItems).ToListAsync();
+            var orders = await _context.Orders.Include(c => c.User).Include(c => c.OrderItems).ThenInclude(oi => oi.Product).ToListAsync();
             return orders;
         }
 
@@ -76,12 +92,12 @@ namespace petstore_vetclinic_api.Services.OrderService
 
             if (order is null)
                 return null;
-
-           // order.Quantity = request.Quantity;
+            order.Status = request.Status;
+            // order.Quantity = request.Quantity;
 
             await _context.SaveChangesAsync();
 
-            return await _context.Orders.Include(ci => ci.OrderItems).ToListAsync();
+            return await _context.Orders.Include(c => c.User).Include(ci => ci.OrderItems).ThenInclude(oi => oi.Product).ToListAsync();
         }
     }
 }

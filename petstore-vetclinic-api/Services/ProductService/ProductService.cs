@@ -49,7 +49,16 @@ namespace petstore_vetclinic_api.Services.ProductService
 
         public async Task<Product?> GetSingleProduct(int id)
         {
-            var product = await _context.Products.Include(p => p.Reviews).ThenInclude(u => u.Users).FirstOrDefaultAsync(p => p.Id == id);
+            var product = await _context.Products
+                .Include(p => p.ProductDescription)
+                .Include(p => p.ProductAdvantage)
+                .Include(p => p.ProductComposition)
+                .Include(p => p.ProductNutritionalValue)
+                .Include(p => p.ProductCharacteristic)
+                .ThenInclude(p => p.ProductCharacteristicsValue)
+                .Include(p => p.Reviews)
+                .ThenInclude(u => u.Users)
+                .FirstOrDefaultAsync(p => p.Id == id);
             if (product is null)
                 return product;
 
@@ -212,6 +221,12 @@ namespace petstore_vetclinic_api.Services.ProductService
                 .Where(p => p.Id == productId)
                 .Include(p => p.Reviews)
                 .ThenInclude(u => u.Users)
+                .Include(p => p.ProductDescription)
+                .Include(p => p.ProductAdvantage)
+                .Include(p => p.ProductComposition)
+                .Include(p => p.ProductNutritionalValue)
+                .Include(p => p.ProductCharacteristic)
+                .ThenInclude(p => p.ProductCharacteristicsValue)
                 .FirstOrDefaultAsync();
 
             return updatedProduct;
@@ -233,6 +248,12 @@ namespace petstore_vetclinic_api.Services.ProductService
                 .Where(p => p.Id == review.ProductId)
                 .Include(p => p.Reviews)
                 .ThenInclude(u => u.Users)
+                .Include(p => p.ProductDescription)
+                .Include(p => p.ProductAdvantage)
+                .Include(p => p.ProductComposition)
+                .Include(p => p.ProductNutritionalValue)
+                .Include(p => p.ProductCharacteristic)
+                .ThenInclude(p => p.ProductCharacteristicsValue)
                 .FirstOrDefaultAsync();
 
             return product;
@@ -250,6 +271,12 @@ namespace petstore_vetclinic_api.Services.ProductService
                 .Where(p => p.Id == review.ProductId)
                 .Include(p => p.Reviews)
                 .ThenInclude(u => u.Users)
+                .Include(p => p.ProductDescription)
+                .Include(p => p.ProductAdvantage)
+                .Include(p => p.ProductComposition)
+                .Include(p => p.ProductNutritionalValue)
+                .Include(p => p.ProductCharacteristic)
+                .ThenInclude(p => p.ProductCharacteristicsValue)
                 .FirstOrDefaultAsync();
 
             return product;

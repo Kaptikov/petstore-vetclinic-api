@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using petstore_vetclinic_api.Data;
 
@@ -11,9 +12,11 @@ using petstore_vetclinic_api.Data;
 namespace petstore_vetclinic_api.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240611090111_ChangeProductTableAddTableProductCharacteristicsValue")]
+    partial class ChangeProductTableAddTableProductCharacteristicsValue
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -593,9 +596,6 @@ namespace petstore_vetclinic_api.Migrations
 
                     b.Property<string>("UserName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("imgUrl")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");

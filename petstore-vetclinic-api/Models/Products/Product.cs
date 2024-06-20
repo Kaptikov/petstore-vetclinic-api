@@ -17,11 +17,11 @@ namespace petstore_vetclinic_api.Models.Products
         public int? Discount { get; set; }
         public string? imgUrl { get; set; }
      //   public FavouriteItem FavouriteItem { get; set; }
-        public ProductAdvantage ProductAdvantage { get; set; }
+        public List<ProductAdvantage> ProductAdvantage { get; set; } = new List<ProductAdvantage>();
         public ProductDescription ProductDescription { get; set; }
         public ProductComposition ProductComposition { get; set; }
-        public ProductCharacteristics ProductCharacteristic { get; set; }
-        public ProductNutritionalValue ProductNutritionalValue { get; set; }
+        public List<ProductCharacteristics> ProductCharacteristic { get; set; } = new List<ProductCharacteristics>();
+        public List<ProductNutritionalValue> ProductNutritionalValue { get; set; } = new List<ProductNutritionalValue>();
         public int CategoryId { get; set; }
         public Category? Categories { get; set; }
         [JsonIgnore]

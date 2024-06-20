@@ -32,6 +32,8 @@ namespace petstore_vetclinic_api.Services.AppointmentService
 
             var appointments = await _context.Appointments
                 .Where(fi => fi.UserId == userId)
+                .Include(a => a.Animal)
+                .Include(a => a.Doctor)
                 .ToListAsync();
 
             return appointments;

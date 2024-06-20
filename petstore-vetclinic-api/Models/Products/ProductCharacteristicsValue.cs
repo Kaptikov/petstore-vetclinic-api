@@ -2,12 +2,12 @@
 
 namespace petstore_vetclinic_api.Models.Products
 {
-    public class ProductNutritionalValue
+    public class ProductCharacteristicsValue
     {
         public int Id { get; set; }
-        public int ProductId { get; set; }
+        public int ProductCharacteristicsId { get; set; }
         [JsonIgnore]
-        public Product? Product { get; set; }
+        public ProductCharacteristics? ProductCharacteristics { get; set; }
         public string Name { get; set; }
     }
 }

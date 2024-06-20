@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using petstore_vetclinic_api.Models.Clinic;
 using petstore_vetclinic_api.Services.AppointmentService;
@@ -16,7 +17,7 @@ namespace petstore_vetclinic_api.Controllers
             _appointmentService = appointmentService;
         }
 
-        [HttpGet]
+        [HttpGet, Authorize(Roles = "Admin")]
         public async Task<ActionResult<List<Appointment>>> GetAllAppointment()
         {
             return await _appointmentService.GetAllAppointment();

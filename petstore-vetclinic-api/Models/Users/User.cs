@@ -16,8 +16,8 @@ namespace petstore_vetclinic_api.Models.Users
         public string? Lastname { get; set; }
         public string? Email { get; set; }
         public string? Phone { get; set; }
+        public string? imgUrl { get; set; }
         public int RoleId { get; set; }
-        
         public Role? Roles { get; set; }
         public DateTime DataRegistration { get; set; } = DateTime.Now;
         [JsonIgnore]

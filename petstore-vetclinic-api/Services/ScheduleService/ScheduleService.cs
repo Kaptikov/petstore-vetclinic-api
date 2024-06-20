@@ -35,7 +35,7 @@ namespace petstore_vetclinic_api.Services.ScheduleService
             var schedules = await GetScheduleForDoctor(doctorId);
 
             var filteredSchedules = schedules
-                .Where(s => s.DoctorId == doctorId && s.Date == date)
+                .Where(s => s.DoctorId == doctorId && s.Date == date && s.IsAvailable)
                 .ToList();
 
             return filteredSchedules;

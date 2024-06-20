@@ -22,6 +22,7 @@ namespace petstore_vetclinic_api.Data
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductAdvantage> ProductAdvantages { get; set; }
         public DbSet<ProductCharacteristics> ProductCharacteristics { get; set; }
+        public DbSet<ProductCharacteristicsValue> ProductCharacteristicsValues { get; set; }
         public DbSet<ProductComposition> ProductCompositions { get; set; }
         public DbSet<ProductDescription> productDescriptions { get; set; }
         public DbSet<ProductNutritionalValue> ProductNutritionalValues { get; set; }

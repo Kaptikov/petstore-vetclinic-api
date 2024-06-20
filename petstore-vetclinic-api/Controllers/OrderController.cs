@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using petstore_vetclinic_api.Models.Carts;
 using petstore_vetclinic_api.Models.Orders;
@@ -18,7 +19,7 @@ namespace petstore_vetclinic_api.Controllers
             _OrderService = OrderService;
         }
 
-        [HttpGet]
+        [HttpGet, Authorize(Roles = "Admin")]
         public async Task<ActionResult<List<Order>>> GetAllOrder()
         {
             return await _OrderService.GetAllOrder();
@@ -53,7 +54,7 @@ namespace petstore_vetclinic_api.Controllers
             return Ok(result);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id}"), Authorize(Roles = "Admin")]
         public async Task<ActionResult<List<Order>>> UpdateOrder(int id, Order request)
         {
             var result = await _OrderService.UpdateOrder(id, request);
@@ -63,7 +64,7 @@ namespace petstore_vetclinic_api.Controllers
             return Ok(result);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), Authorize(Roles = "Admin")]
         public async Task<ActionResult<List<Order>>> DeleteOrder(int id)
         {
             var result = await _OrderService.DeleteOrder(id);
